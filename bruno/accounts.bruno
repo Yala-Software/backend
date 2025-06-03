@@ -1,0 +1,61 @@
+{
+  "version": "1",
+  "name": "Cuentas",
+  "requests": [
+    {
+      "name": "Listar Mis Cuentas",
+      "url": "http://localhost:8000/api/accounts/",
+      "method": "GET",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        }
+      ]
+    },
+    {
+      "name": "Ver Detalles de Cuenta",
+      "url": "http://localhost:8000/api/accounts/1",
+      "method": "GET",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        }
+      ]
+    },
+    {
+      "name": "Exportar Estado de Cuenta (CSV)",
+      "url": "http://localhost:8000/api/accounts/1/export?format=csv",
+      "method": "POST",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        }
+      ]
+    },
+    {
+      "name": "Exportar Estado de Cuenta (XML)",
+      "url": "http://localhost:8000/api/accounts/1/export?format=xml",
+      "method": "POST",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{token}}"
+        }
+      ]
+    }
+  ],
+  "environments": [
+    {
+      "name": "local",
+      "variables": [
+        {
+          "name": "token",
+          "value": "PEGAR_AQUI_TU_TOKEN_DE_ACCESO"
+        }
+      ]
+    }
+  ]
+}
