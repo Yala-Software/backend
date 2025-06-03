@@ -4,7 +4,7 @@ from core.exchange.api1_adapter import ExchangeRateAPI
 from core.exchange.api2_adapter import CurrencyConverterAPI
 
 class ExchangeService:
-    """Singleton service for currency exchange rates"""
+    """Singleton para el servicio de Exchange"""
     _instance = None
     
     def __new__(cls):
@@ -16,7 +16,7 @@ class ExchangeService:
         return cls._instance
     
     def get_exchange_rate(self, from_currency: str, to_currency: str) -> float:
-        """Get exchange rate using the current API with fallback"""
+        """Obtenemos el tipo de cambio de una moneda a otra, intentando primero con la API primaria y luego con la secundaria si falla"""
         try:
             return self._current_api.get_exchange_rate(from_currency, to_currency)
         except Exception:
@@ -29,13 +29,13 @@ class ExchangeService:
                 raise ValueError(f"Could not get exchange rate from {from_currency} to {to_currency} from any API")
     
     def switch_api(self) -> None:
-        """Switch between primary and fallback API"""
+        """Hacemos switch entre las APIs primaria y secundaria"""
         self._current_api = self._fallback_api if self._current_api == self._primary_api else self._primary_api
     
     def get_api_name(self) -> str:
-        """Get the name of the current API being used"""
+        """Obtener el nombre de la API actual"""
         return self._current_api.__class__.__name__
     
     def get_supported_currencies(self) -> Dict[str, str]:
-        """Get list of supported currencies"""
+        """Obtener la lista de divisas admitidas por la API actual"""
         return self._current_api.get_supported_currencies()
