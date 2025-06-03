@@ -41,3 +41,22 @@ class Account(Base):
     currency = relationship("Currency", back_populates="accounts")
     transactions_out = relationship("Transaction", foreign_keys="Transaction.source_account_id", back_populates="source_account")
     transactions_in = relationship("Transaction", foreign_keys="Transaction.destination_account_id", back_populates="destination_account")
+
+class Transaction(Base):
+    __tablename__ = "transactions"
+
+    id = Column(Integer, primary_key=True, index=True)
+    source_account_id = Column(Integer, ForeignKey("accounts.id"))
+    destination_account_id = Column(Integer, ForeignKey("accounts.id"))
+    source_amount = Column(Float)
+    destination_amount = Column(Float)
+    source_currency_id = Column(Integer, ForeignKey("currencies.id"))
+    destination_currency_id = Column(Integer, ForeignKey("currencies.id"))
+    exchange_rate = Column(Float)
+    description = Column(Text, nullable=True)
+    timestamp = Column(DateTime, default=datetime.datetime.utcnow)
+
+    source_account = relationship("Account", foreign_keys=[source_account_id], back_populates="transactions_out")
+    destination_account = relationship("Account", foreign_keys=[destination_account_id], back_populates="transactions_in")
+
+    sender = relationship("User", foreign_keys="[Account.user_id]", viewonly=True)  # opcional si necesitas esto
