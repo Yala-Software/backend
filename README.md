@@ -1,60 +1,3 @@
-# Sistema Backend de Intercambio de Monedas
-
-Un backend basado en FastAPI para operaciones de intercambio de monedas, que permite múltiples usuarios, cuentas en diferentes monedas y transacciones entre usuarios y monedas.
-
-## Características
-
-- Registro de usuarios y autenticación con JWT
-- Múltiples cuentas en diferentes monedas para cada usuario
-- Conversión de monedas utilizando dos APIs diferentes con sistema de respaldo
-- Sistema de transacciones entre usuarios y monedas
-- Estados de cuenta e historial de transacciones
-- Notificaciones por correo electrónico para varios eventos
-- Funcionalidad de exportación (CSV, XML)
-- Patrones de diseño: Singleton, Adapter, Strategy, Observer
-
-## Configuración e Instalación
-
-1. Clona este repositorio
-2. Instala los paquetes requeridos:
-   ```
-   pip install -r requirements.txt
-   ```
-3. Configura las variables de entorno en el archivo `.env`
-4. Ejecuta la aplicación:
-   ```
-   uvicorn main:app --reload
-   ```
-5. Accede a la documentación de la API en http://localhost:8000/docs
-
-## Estructura del Proyecto
-
-```
-backend/
-├── api/
-│   └── routes/
-│       ├── auth.py          # Endpoints de autenticación
-│       ├── users.py         # Endpoints de gestión de usuarios
-│       ├── accounts.py      # Endpoints de gestión de cuentas
-├── core/
-│   ├── security.py          # Utilidades JWT y contraseñas
-│   └── exchange/
-│       ├── interface.py     # Interfaz de API de cambio
-│       ├── api1_adapter.py  # Implementación de adaptador de API de cambio
-│       └── api2_adapter.py  # Segunda implementación de adaptador de API de cambio
-├── database/
-│   ├── database.py          # Configuración de conexión a base de datos
-│   └── models.py            # Modelos SQLAlchemy
-├── data/                    # Archivos de base de datos SQLite
-├── services/
-│   ├── exchange_service.py  # Servicio de tipos de cambio
-│   └── email_service.py     # Servicio de notificaciones por correo
-├── .env                     # Variables de entorno
-├── config.py                # Configuración de la aplicación
-├── main.py                  # Punto de entrada principal de la aplicación
-└── requirements.txt         # Dependencias del proyecto
-```
-
 ## Endpoints de la API
 
 ### Autenticación
@@ -270,18 +213,9 @@ La implementación de transacciones debería:
 5. Crear un registro de transacción
 6. Enviar notificaciones por correo electrónico tanto al remitente como al destinatario
 
-## Patrones de Diseño
-
-Este proyecto utiliza varios patrones de diseño:
-
-1. **Patrón Singleton**: Utilizado para el ExchangeService para asegurar que solo exista una instancia
-2. **Patrón Adapter**: Utilizado para las interfaces de API de cambio para unificar múltiples proveedores de API
-3. **Patrón Strategy**: Utilizado para cambiar entre diferentes APIs de tipos de cambio
-4. **Patrón Observer**: (Por implementar en el sistema de transacciones) Para actualizar el historial de transacciones
-
 ## Esquema de Base de Datos
 
-- **users**: Información de usuario (id, username, email, hashed_password, full_name)
+- **users**: Información de usuario (id, username, email, hashed_password, full_name)git 
 - **currencies**: Información de monedas (id, code, name)
 - **accounts**: Cuentas de usuario (id, user_id, currency_id, balance)
 - **transactions**: Registros de transacciones (id, sender_id, receiver_id, source_account_id, destination_account_id, etc.)
