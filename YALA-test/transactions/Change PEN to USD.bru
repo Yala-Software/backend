@@ -1,15 +1,23 @@
 meta {
-  name: Listar mis cuentas
+  name: Change PEN to USD
   type: http
   seq: 1
 }
 
-get {
-  url: http://localhost:8000/api/accounts/
-  body: none
+post {
+  url: http://localhost:8000/api/transactions
+  body: json
   auth: bearer
 }
 
 auth:bearer {
   token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ4QGV4YW1wbGUuY29tIiwiZXhwIjoxNzQ5MTY1NTIyfQ.MWiHhzmWAvLmsoWclwjXHlV3DLvOuL_yrg3L5d3VggU
+}
+
+body:json {
+  {
+    "source_account_id" : 1,
+    "destination_account_id" : 2,
+    "amount" : 20
+  }
 }
