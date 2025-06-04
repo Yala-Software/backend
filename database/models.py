@@ -9,7 +9,7 @@ class User(Base):
     __tablename__ = "users"
     
     id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, index=True)
+    username = Column(String)
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
     full_name = Column(String)
@@ -44,19 +44,27 @@ class Account(Base):
 
 class Transaction(Base):
     __tablename__ = "transactions"
-
+    
     id = Column(Integer, primary_key=True, index=True)
+    
+    sender_id = Column(Integer, ForeignKey("users.id"))
+    receiver_id = Column(Integer, ForeignKey("users.id"))
+    
     source_account_id = Column(Integer, ForeignKey("accounts.id"))
     destination_account_id = Column(Integer, ForeignKey("accounts.id"))
+
     source_amount = Column(Float)
-    destination_amount = Column(Float)
     source_currency_id = Column(Integer, ForeignKey("currencies.id"))
+    destination_amount = Column(Float)
     destination_currency_id = Column(Integer, ForeignKey("currencies.id"))
     exchange_rate = Column(Float)
+    
     description = Column(Text, nullable=True)
     timestamp = Column(DateTime, default=datetime.datetime.utcnow)
-
+    
+    sender = relationship("User", foreign_keys=[sender_id], back_populates="sent_transactions")
+    receiver = relationship("User", foreign_keys=[receiver_id], back_populates="received_transactions")
     source_account = relationship("Account", foreign_keys=[source_account_id], back_populates="transactions_out")
     destination_account = relationship("Account", foreign_keys=[destination_account_id], back_populates="transactions_in")
-
-    sender = relationship("User", foreign_keys="[Account.user_id]", viewonly=True)  # opcional si necesitas esto
+    source_currency = relationship("Currency", foreign_keys=[source_currency_id])
+    destination_currency = relationship("Currency", foreign_keys=[destination_currency_id])

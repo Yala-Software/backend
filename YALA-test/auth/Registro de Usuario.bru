@@ -1,0 +1,20 @@
+meta {
+  name: Registro de Usuario
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8000/api/register
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "username": "ian",
+    "email": "ian.6780.cf@gmail.com",
+    "password": "contraseña123",
+    "full_name": "Ian"
+  }
+}

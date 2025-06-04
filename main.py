@@ -6,7 +6,7 @@ from database.database import get_db, create_db_and_tables, init_db_data
 from api.routes import auth, users, accounts, transactions
 from services.exchange_service import ExchangeService
 
-app = FastAPI(title="API de Intercambio de Monedas", version="1.0.0")
+app = FastAPI(title="YALA ¿Ya la tienes?", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -19,8 +19,7 @@ app.add_middleware(
 app.include_router(auth.router, prefix="/api", tags=["Autenticación"])
 app.include_router(users.router, prefix="/api/users", tags=["Usuarios"])
 app.include_router(accounts.router, prefix="/api/accounts", tags=["Cuentas"])
-app.include_router(transactions.router, prefix="/api/transactions", tags=["Transactions"])
-
+app.include_router(transactions.router, prefix="/api/transactions", tags=["Transacciones"])
 
 os.makedirs("data", exist_ok=True)
 
@@ -33,7 +32,7 @@ async def startup():
 
 @app.get("/")
 async def root():
-    return {"message": "API de Intercambio de Monedas está funcionando"}
+    return {"message": "YALA está funcionando"}
 
 @app.get("/api/exchange-rates/{from_currency}/{to_currency}")
 async def get_exchange_rate(from_currency: str, to_currency: str):

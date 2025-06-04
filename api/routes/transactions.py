@@ -1,14 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from typing import List
 from pydantic import BaseModel
+from typing import List, Optional
 
 from database.database import get_db
-from database.models import Account, Transaction, Currency, User
+from database.models import User, Account, Transaction, Currency
 from core.security import get_current_user
 from services.exchange_service import ExchangeService
-
-exchange_service = ExchangeService()
+from services.email_service import send_transaction_notification
 
 router = APIRouter()
 
@@ -16,7 +15,7 @@ class TransactionCreate(BaseModel):
     source_account_id: int
     destination_account_id: int
     amount: float
-    description: str = None
+    description: Optional[str] = None
 
 class TransactionResponse(BaseModel):
     id: int
@@ -25,66 +24,100 @@ class TransactionResponse(BaseModel):
     destination_amount: float
     destination_currency_id: int
     exchange_rate: float
-    description: str = None
+    description: Optional[str]
     timestamp: str
-
+    
     class Config:
         orm_mode = True
 
 @router.post("/", response_model=TransactionResponse)
 async def create_transaction(
-    tx: TransactionCreate,
+    transaction_data: TransactionCreate, 
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    source_account = db.query(Account).filter_by(id=tx.source_account_id, user_id=current_user.id).first()
-    destination_account = db.query(Account).filter_by(id=tx.destination_account_id).first()
-
-    if not source_account or not destination_account:
-        raise HTTPException(status_code=404, detail="Cuenta no encontrada")
-
-    if source_account.balance < tx.amount:
-        raise HTTPException(status_code=400, detail="Fondos insuficientes")
-
-    if source_account.currency_id == destination_account.currency_id:
-        exchange_rate = 1.0
-        destination_amount = tx.amount
+    source_account = db.query(Account).filter(
+        Account.id == transaction_data.source_account_id,
+        Account.user_id == current_user.id
+    ).first()
+    
+    if not source_account:
+        raise HTTPException(status_code=404, detail="La cuenta de origen no existe o no pertenece al usuario")
+    
+    destination_account = db.query(Account).filter(
+        Account.id == transaction_data.destination_account_id
+    ).first()
+    
+    if not destination_account:
+        raise HTTPException(status_code=404, detail="La cuenta de destino no existe")
+    
+    if source_account.balance < transaction_data.amount:
+        raise HTTPException(status_code=400, detail="Balance insuficiente en la cuenta de origen")
+    
+    source_currency = db.query(Currency).filter(Currency.id == source_account.currency_id).first()
+    destination_currency = db.query(Currency).filter(Currency.id == destination_account.currency_id).first()
+    
+    exchange_service = ExchangeService()
+    if source_currency.code != destination_currency.code:
+        exchange_rate = exchange_service.get_exchange_rate(source_currency.code, destination_currency.code)
+        destination_amount = transaction_data.amount * exchange_rate
     else:
-        exchange_rate = exchange_service.get_exchange_rate(source_account.currency.code, destination_account.currency.code)
-        destination_amount = tx.amount * exchange_rate
-
-    # Actualizar balances
-    source_account.balance -= tx.amount
-    destination_account.balance += destination_amount
-
-    transaction = Transaction(
-        source_account_id=tx.source_account_id,
-        destination_account_id=tx.destination_account_id,
-        source_amount=tx.amount,
+        exchange_rate = 1.0
+        destination_amount = transaction_data.amount
+    
+    new_transaction = Transaction(
+        sender_id=current_user.id,
+        receiver_id=destination_account.user_id,
+        source_account_id=source_account.id,
+        destination_account_id=destination_account.id,
+        source_amount=transaction_data.amount,
+        source_currency_id=source_currency.id,
         destination_amount=destination_amount,
-        source_currency_id=source_account.currency_id,
-        destination_currency_id=destination_account.currency_id,
+        destination_currency_id=destination_currency.id,
         exchange_rate=exchange_rate,
-        description=tx.description
+        description=transaction_data.description
     )
-
-    db.add(transaction)
+    
+    source_account.balance -= transaction_data.amount
+    destination_account.balance += destination_amount
+    
+    db.add(new_transaction)
     db.commit()
-    db.refresh(transaction)
-
-    return transaction
+    db.refresh(new_transaction)
+    
+    receiver = db.query(User).filter(User.id == destination_account.user_id).first()
+    
+    try:
+        send_transaction_notification(
+            current_user.email,
+            current_user.full_name, 
+            new_transaction, 
+            source_currency.code,
+            destination_currency.code,
+            is_sender=True
+        )
+        
+        send_transaction_notification(
+            receiver.email,
+            receiver.full_name,
+            new_transaction,
+            source_currency.code,
+            destination_currency.code,
+            is_sender=False
+        )
+    except Exception as e:
+        print(f"Error el enviar la notificacion: {e}")
+    
+    return new_transaction
 
 @router.get("/", response_model=List[TransactionResponse])
 async def get_user_transactions(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    accounts = db.query(Account.id).filter_by(user_id=current_user.id).all()
-    account_ids = [acc.id for acc in accounts]
-
     transactions = db.query(Transaction).filter(
-        Transaction.source_account_id.in_(account_ids) |
-        Transaction.destination_account_id.in_(account_ids)
+        (Transaction.sender_id == current_user.id) | 
+        (Transaction.receiver_id == current_user.id)
     ).order_by(Transaction.timestamp.desc()).all()
-
+    
     return transactions
