@@ -1,4 +1,3 @@
-# services/email_service.py
 import smtplib
 import os
 import unicodedata
@@ -15,9 +14,6 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
 
-# ---------------------------------------------------------------------------
-#  Configuración ― toma los valores desde tu propio config.py ó .env
-# ---------------------------------------------------------------------------
 from config import (
     SMTP_SERVER,
     SMTP_PORT,
@@ -26,9 +22,6 @@ from config import (
     EMAIL_FROM,
 )
 
-# ---------------------------------------------------------------------------
-#  Utilidades
-# ---------------------------------------------------------------------------
 def normalize_text(text: str | None) -> str:
     """
     Reemplaza NBSP (\xa0) por espacio normal y normaliza a NFC.
@@ -38,9 +31,6 @@ def normalize_text(text: str | None) -> str:
         return ""
     return unicodedata.normalize("NFC", text.replace("\xa0", " "))
 
-# ---------------------------------------------------------------------------
-#  Envío genérico de correos
-# ---------------------------------------------------------------------------
 def send_email(to_email: str, subject: str, body_html: str, attachments: dict[str, str | bytes] | None = None) -> bool:
     """
     Envía un correo HTML (UTF-8) con adjuntos opcionales.
@@ -50,17 +40,13 @@ def send_email(to_email: str, subject: str, body_html: str, attachments: dict[st
     body_html = normalize_text(body_html)
     to_email = to_email.strip()
 
-    # Use MIMEMultipart instead of EmailMessage for better encoding control
     msg = MIMEMultipart('alternative')
 
-    # Simplify From header to avoid encoding issues
     from_user, from_domain = EMAIL_FROM.split("@", 1)
     msg["From"] = f"YALA <{EMAIL_FROM}>"
     msg["To"] = to_email
-    # Set subject with Header class to ensure proper encoding
     msg['Subject'] = Header(subject, 'utf-8')
     
-    # Add plain text and HTML parts with explicit UTF-8 encoding
     text_part = MIMEText("Este mensaje requiere un visor HTML.", 'plain', 'utf-8')
     html_part = MIMEText(body_html, 'html', 'utf-8')
     
@@ -73,7 +59,6 @@ def send_email(to_email: str, subject: str, body_html: str, attachments: dict[st
                 content = content.encode("utf-8")
 
             attachment = MIMEApplication(content)
-            # Safe filename handling without Header class
             attachment.add_header('Content-Disposition', 'attachment', 
                                  filename=normalize_text(filename).encode('utf-8').decode('utf-8'))
             
@@ -87,21 +72,12 @@ def send_email(to_email: str, subject: str, body_html: str, attachments: dict[st
     try:
         with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
             server.starttls()
-            
-            # Normalize the username and password to remove problematic characters
+
             clean_username = normalize_text(SMTP_USERNAME)
             clean_password = normalize_text(SMTP_PASSWORD).replace('\xa0', ' ')
-            
-            print("Attempting SMTP authentication...")
             server.login(clean_username, clean_password)
-            print("SMTP authentication successful")
-            
-            print(f"Attempting to send email to {to_email}")
-            
-            # Convert message to string and encode as bytes
             message_string = msg.as_string()
             
-            # Use lower-level sendmail instead of send_message to have more control
             server.sendmail(
                 from_addr=EMAIL_FROM,
                 to_addrs=[to_email],
@@ -124,9 +100,6 @@ def send_email(to_email: str, subject: str, body_html: str, attachments: dict[st
         print(f"- Destinatario: {to_email}")
         return False
 
-# ---------------------------------------------------------------------------
-#  Funciones de negocio (bienvenida, notificación, estado de cuenta)
-# ---------------------------------------------------------------------------
 def send_welcome_email(to_email: str, user_name: str) -> bool:
     subject = "¡Bienvenido a YALA!"
     body = textwrap.dedent(f"""\
@@ -175,9 +148,6 @@ def send_transaction_notification(
     """
     return send_email(to_email, subject, body)
 
-# ---------------------------------------------------------------------------
-#  Generadores de exportaciones CSV / XML
-# ---------------------------------------------------------------------------
 def create_csv_export(user, account, transactions) -> str:
     with tempfile.NamedTemporaryFile(delete=False, mode="w", newline="", suffix=".csv") as tmp:
         w = csv.writer(tmp)
@@ -233,9 +203,6 @@ def create_xml_export(user, account, transactions) -> bytes:
 
     return ET.tostring(root, encoding="utf-8", method="xml")
 
-# ---------------------------------------------------------------------------
-#  Envío de estado de cuenta
-# ---------------------------------------------------------------------------
 def send_account_statement(to_email, user_name, account, transactions, fmt: str = "csv") -> bool:
     subject = f"Estado de Cuenta - Cuenta en {account.currency.code}"
     body = f"""
