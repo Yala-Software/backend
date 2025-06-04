@@ -1,25 +1,40 @@
 import smtplib
 import os
+import unicodedata
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
+from email.header import Header
 import csv
 import xml.etree.ElementTree as ET
 import tempfile
 from datetime import datetime
+import codecs
 
 from config import SMTP_SERVER, SMTP_PORT, SMTP_USERNAME, SMTP_PASSWORD, EMAIL_FROM
 
+def normalize_text(text):
+    """Normaliza el texto para evitar problemas de codificación"""
+    if text is None:
+        return ""
+    text = text.replace('\xa0', ' ')
+    text = unicodedata.normalize('NFC', text)
+    return text
+
 def send_email(to_email, subject, body, attachments=None):
+    """Envía un correo electrónico con codificación adecuada para caracteres españoles"""
     msg = MIMEMultipart()
     msg['From'] = EMAIL_FROM
     msg['To'] = to_email
-    msg['Subject'] = subject
+    msg['Subject'] = Header(subject, 'utf-8')
     
-    msg.attach(MIMEText(body, 'html'))
+    msg.attach(MIMEText(body, 'html', 'utf-8'))
     
     if attachments:
         for filename, content in attachments.items():
+            if isinstance(content, str):
+                content = content.encode('utf-8')
+            
             attachment = MIMEApplication(content, Name=filename)
             attachment['Content-Disposition'] = f'attachment; filename="{filename}"'
             msg.attach(attachment)
@@ -33,22 +48,28 @@ def send_email(to_email, subject, body, attachments=None):
         return True
     except Exception as e:
         print(f"Error de correo: {e}")
+        print(f"- Servidor SMTP: {SMTP_SERVER}")
+        print(f"- Puerto SMTP: {SMTP_PORT}")
+        print(f"- Destinatario: {to_email}")
         return False
 
 def send_welcome_email(to_email, user_name):
+    """Envía un correo de bienvenida con formato adecuado para español"""
     subject = "Bienvenido a YALA"
+    
     body = f"""
     <html>
     <body>
-        <h2>¡Bienvenido a YALA, {user_name}!</h2>
+        <h2>Bienvenido a YALA, {user_name}!</h2>
         <p>Tu cuenta ha sido creada exitosamente.</p>
         <p>Ahora puedes comenzar a administrar tus cuentas y realizar transacciones.</p>
-        <p>¡Gracias por elegir nuestro servicio!</p>
+        <p>Gracias por elegir nuestro servicio!</p>
         <br>
         <p>Saludos cordiales,<br>El Equipo de YALA</p>
     </body>
     </html>
     """
+    
     return send_email(to_email, subject, body)
 
 def send_transaction_notification(to_email, user_name, transaction, source_currency, dest_currency, is_sender=True):
@@ -70,7 +91,7 @@ def send_transaction_notification(to_email, user_name, transaction, source_curre
         </ul>
         <p>¡Gracias por usar nuestro servicio!</p>
         <br>
-        <p>Saludos cordiales,<br>El Equipo de Intercambio de Monedas</p>
+        <p>Saludos cordiales,<br>El Equipo de YALA</p>
     </body>
     </html>
     """

@@ -1,0 +1,18 @@
+meta {
+  name: Iniciar Sesión
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8000/api/login
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "email": "x@example.com",
+    "password": "password123"
+  }
+}

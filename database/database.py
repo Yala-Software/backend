@@ -23,14 +23,11 @@ def create_db_and_tables():
     
 def init_db_data():
     """Inicializamos la BD con datos por defecto"""
-    # Primero creamos las tablas
     Base.metadata.create_all(bind=engine)
     
-    # Luego abrimos la sesión
     db = SessionLocal()
     
     try:
-        # Verificamos si ya hay usuarios
         if db.query(User).count() > 0:
             return
             
