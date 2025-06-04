@@ -149,7 +149,7 @@ def send_transaction_notification(
     return send_email(to_email, subject, body)
 
 def create_csv_export(user, account, transactions) -> str:
-    with tempfile.NamedTemporaryFile(delete=False, mode="w", newline="", suffix=".csv") as tmp:
+    with tempfile.NamedTemporaryFile(delete=False, mode="w", newline="", suffix=".csv", encoding="utf-8") as tmp:
         w = csv.writer(tmp)
         w.writerow(["Estado de Cuenta"])
         w.writerow([])
