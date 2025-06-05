@@ -12,7 +12,7 @@ YALA es una aplicación de gestión financiera que permite a los usuarios admini
 
 ### 1. Clonar el repositorio
 ```bash
-git clone https://github.com/tu-usuario/yala-backend.git
+git clone https://github.com/Yala-Software/backend
 cd yala-backend
 ```
 
