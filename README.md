@@ -27,13 +27,18 @@ pip install -r requirements.txt
 ### 4️⃣ Configurar variables de entorno
 Crea un archivo `.env` en la raíz del proyecto con las siguientes variables:
 ```
-DATABASE_URL=postgresql://usuario:contraseña@localhost/nombre_db
-SECRET_KEY=tu_clave_secreta_para_jwt
-MAIL_SERVER=smtp.ejemplo.com
-MAIL_PORT=587
-MAIL_USERNAME=tu_email@ejemplo.com
-MAIL_PASSWORD=tu_contraseña
-MAIL_FROM=noreply@ejemplo.com
+JWT_SECRET_KEY=
+JWT_ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=1440
+
+SMTP_SERVER=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USERNAME=proyectodbp1@gmail.com
+SMTP_PASSWORD=nsfr upkz ajfa ptar
+EMAIL_FROM=proyectodbp1@gmail.com
+
+EXCHANGE_API1_KEY=
+EXCHANGE_API2_KEY=
 ```
 
 ### 5️⃣ Ejecutar el servidor de desarrollo
