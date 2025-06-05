@@ -1,4 +1,4 @@
-# 💸 YALA - Sistema de Gestión de Cuentas y Transacciones
+# 💸 YALA - Sistema de Cambio de Divisas y Transacciones
 ![Uso de la aplicación](./images/09.jpeg)
 ## 📋 Descripción del Proyecto
 
