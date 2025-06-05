@@ -3,11 +3,6 @@
 ## Descripción del Proyecto
 YALA es una aplicación de gestión financiera que permite a los usuarios administrar cuentas en diferentes monedas, realizar transacciones entre ellas y gestionar tipos de cambio.
 
-## Requisitos Previos
-- Python 3.8+ instalado
-- Base de datos PostgreSQL
-- Gestor de paquetes pip
-
 ## Configuración Inicial
 
 ### 1. Clonar el repositorio
