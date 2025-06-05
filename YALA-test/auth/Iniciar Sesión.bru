@@ -12,7 +12,12 @@ post {
 
 body:json {
   {
-    "email": "michalhinojosa@gmail.com",
+    "email": "x@gmail.com",
     "password": "password123"
   }
+}
+
+script:post-response {
+  bru.setEnvVar("jwt", res.body.access_token);
+  
 }
