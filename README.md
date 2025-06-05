@@ -90,4 +90,5 @@ Se presenta un recorrido por las secciones del frontend:
 ![Uso de la aplicación](./images/06.png)
 
 <h2 align="center">¡Cuéntanos! ¿Ya la tienes?</h2>
+
 ![Uso de la aplicación](./images/10.jpeg)
