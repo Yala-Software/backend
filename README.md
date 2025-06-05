@@ -37,8 +37,8 @@ SMTP_USERNAME=proyectodbp1@gmail.com
 SMTP_PASSWORD=nsfr upkz ajfa ptar
 EMAIL_FROM=proyectodbp1@gmail.com
 
-EXCHANGE_API1_KEY=
-EXCHANGE_API2_KEY=
+EXCHANGE_API1_KEY= [API KEY](https://www.exchangerate-api.com/)
+EXCHANGE_API2_KEY= NO ES NECESARIO
 ```
 
 ### 5️⃣ Ejecutar el servidor de desarrollo
