@@ -3,8 +3,9 @@
 ### Autenticación
 
 - **POST /api/login**
+
   - Descripción: Autenticar usuario y obtener token JWT
-  - Cuerpo de la Solicitud: 
+  - Cuerpo de la Solicitud:
     ```json
     {
       "username": "string",
@@ -21,7 +22,7 @@
 
 - **POST /api/register**
   - Descripción: Registrar nuevo usuario
-  - Cuerpo de la Solicitud: 
+  - Cuerpo de la Solicitud:
     ```json
     {
       "username": "string",
@@ -41,6 +42,7 @@
 ### Usuarios
 
 - **GET /api/users/me**
+
   - Descripción: Obtener información del usuario actual
   - Encabezado Requerido: `Authorization: Bearer {token}`
   - Respuesta:
@@ -69,6 +71,7 @@
 ### Cuentas
 
 - **GET /api/accounts/**
+
   - Descripción: Obtener todas las cuentas del usuario actual
   - Encabezado Requerido: `Authorization: Bearer {token}`
   - Respuesta:
@@ -87,6 +90,7 @@
     ```
 
 - **GET /api/accounts/{account_id}**
+
   - Descripción: Obtener detalles de la cuenta con transacciones
   - Encabezado Requerido: `Authorization: Bearer {token}`
   - Respuesta:
@@ -130,6 +134,7 @@
 ### Tipos de Cambio
 
 - **GET /api/exchange-rates/{from_currency}/{to_currency}**
+
   - Descripción: Obtener tipo de cambio entre dos monedas
   - Respuesta:
     ```json
@@ -159,6 +164,7 @@ La funcionalidad de transacciones debe ser implementada en un módulo separado. 
 ### Endpoints a implementar
 
 - **POST /api/transactions/**
+
   - Descripción: Crear una nueva transacción
   - Encabezado Requerido: `Authorization: Bearer {token}`
   - Cuerpo de la Solicitud:
@@ -206,6 +212,7 @@ La funcionalidad de transacciones debe ser implementada en un módulo separado. 
 ### Requisitos de Implementación
 
 La implementación de transacciones debería:
+
 1. Validar que la cuenta de origen pertenece al usuario actual
 2. Comprobar si hay saldo suficiente en la cuenta de origen
 3. Utilizar el servicio de cambio para calcular la tasa de conversión si las monedas son diferentes
@@ -215,7 +222,12 @@ La implementación de transacciones debería:
 
 ## Esquema de Base de Datos
 
-- **users**: Información de usuario (id, username, email, hashed_password, full_name)git 
+- **users**: Información de usuario (id, username, email, hashed_password, full_name)git
 - **currencies**: Información de monedas (id, code, name)
 - **accounts**: Cuentas de usuario (id, user_id, currency_id, balance)
 - **transactions**: Registros de transacciones (id, sender_id, receiver_id, source_account_id, destination_account_id, etc.)
+
+## Tutorial Bruno
+
+- **collection**: una vez descargada la aplicacion apretar en los 3 puntos en la esquina derecha de la aplicacion, al costado del perro. Ahi apretar en **Open Collection** y seleccionar la carpeta **YALA-test**
+- **environment**: Una ves abierta la carpeta en bruno, apretar en la carpeta en bruno y luego seleccionar un **environment**, como no habra ninguno seleccionar create environment y agregar la variable **jwt** en **Add Variable**.

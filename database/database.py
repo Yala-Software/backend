@@ -40,7 +40,7 @@ def init_db_data():
         
         user_x = User(
             username="X",
-            email="michalhinojosa@gmail.com",
+            email="x@gmail.com",
             hashed_password=hashed_password,
             full_name="User X"
         )
