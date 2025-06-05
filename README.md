@@ -54,6 +54,7 @@ EXCHANGE_API2_KEY=  # No es necesario configurar esta variable
 ```bash
 uvicorn main:app --reload
 ```
+</details>
 
 ---
 
@@ -68,6 +69,7 @@ La implementación de transacciones debería:
 4. 📊 Actualizar los saldos de ambas cuentas
 5. 📝 Crear un registro de transacción
 6. 📧 Enviar notificaciones por correo electrónico tanto al remitente como al destinatario
+</details>
 
 ---
 
@@ -78,6 +80,7 @@ La implementación de transacciones debería:
 - **💵 currencies**: Información de monedas (id, code, name)
 - **🏦 accounts**: Cuentas de usuario (id, user_id, currency_id, balance)
 - **💱 transactions**: Registros de transacciones (id, sender_id, receiver_id, source_account_id, destination_account_id, etc.)
+</details>
 
 ---
 
@@ -86,6 +89,7 @@ La implementación de transacciones debería:
 
 - **📁 collection**: una vez descargada la aplicación, haz clic en los 3 puntos en la esquina derecha de la aplicación, al costado del perro. Ahí selecciona **Open Collection** y elige la carpeta **YALA-test**
 - **🔧 environment**: Una vez abierta la carpeta en Bruno, haz clic en la carpeta y luego selecciona un **environment**. Como no habrá ninguno, selecciona "create environment" y agrega la variable **jwt** en **Add Variable**.
+</details>
 
 ---
 
@@ -102,6 +106,7 @@ Se presenta un recorrido por las secciones del frontend:
 ![Uso de la aplicación](./images/05.png)
 ![Uso de la aplicación](./images/06.png)
 
+</details>
 <h2 align="center">¡Cuéntanos! ¿Ya la tienes?</h2>
 
 ![Uso de la aplicación](./images/10.jpeg)
