@@ -1,5 +1,5 @@
 # 💸 YALA - Sistema de Gestión de Cuentas y Transacciones
-
+![Uso de la aplicación](./images/09.png)
 ## 📋 Descripción del Proyecto
 YALA es una aplicación de gestión financiera que permite a los usuarios administrar cuentas en diferentes monedas, realizar transacciones entre ellas y gestionar tipos de cambio.
 
@@ -88,3 +88,6 @@ Se presenta un recorrido por las secciones del frontend:
 ![Uso de la aplicación](./images/04.png)
 ![Uso de la aplicación](./images/05.png)
 ![Uso de la aplicación](./images/06.png)
+
+<h2 align="center">¡Cuéntanos! ¿Ya la tienes?</h2>
+![Uso de la aplicación](./images/10.png)
