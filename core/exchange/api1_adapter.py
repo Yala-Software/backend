@@ -3,7 +3,6 @@ from typing import Dict
 from .interface import ExchangeAPIInterface
 from config import EXCHANGE_API1_KEY, SUPPORTED_CURRENCIES
 
-print("key: ", EXCHANGE_API1_KEY)
 
 class ExchangeRateAPI(ExchangeAPIInterface):
     """Adaptador para ExchangeRate-API"""

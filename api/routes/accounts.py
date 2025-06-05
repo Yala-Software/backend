@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session, joinedload
 from typing import List
 from pydantic import BaseModel
+from datetime import datetime
 
 from database.database import get_db
 from database.models import User, Account, Currency, Transaction
@@ -34,7 +35,7 @@ class TransactionInfo(BaseModel):
     destination_currency_id: int
     exchange_rate: float
     description: str = None
-    timestamp: str
+    timestamp: datetime
     
     class Config:
         orm_mode = True
