@@ -2,7 +2,7 @@
 ![Uso de la aplicación](./images/09.jpeg)
 ## 📋 Descripción del Proyecto
 
-YALA es una plataforma financiera integral diseñada para simplificar la gestión de finanzas personales e internacionales. Nuestra aplicación permite a los usuarios:
+YALA es una plataforma de Cambio de Divisas integral diseñada para simplificar la gestión de finanzas personales e internacionales. Nuestra aplicación permite a los usuarios:
 
 - 💼 **Gestionar múltiples cuentas** en diferentes divisas desde una interfaz unificada
 - 🔄 **Realizar transferencias instantáneas** entre cuentas propias y de terceros
