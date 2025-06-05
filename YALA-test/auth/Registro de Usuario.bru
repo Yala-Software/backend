@@ -18,3 +18,8 @@ body:json {
     "full_name": "test"
   }
 }
+
+script:post-response {
+  bru.setEnvVar("jwt", res.body.access_token);
+  
+}
