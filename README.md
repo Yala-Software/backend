@@ -13,8 +13,8 @@ YALA es una plataforma financiera integral diseñada para simplificar la gestió
 Desarrollada con tecnologías modernas como FastAPI y sistemas robustos de autenticación, YALA proporciona una experiencia fluida y segura para todas tus necesidades de transferencias nacionales e internacionales.
 
 ---
-
-## 🚀 Configuración Inicial
+<details>
+  <summary><strong>🚀 Configuración Inicial</strong></summary>
 
 ### 1️⃣ Clonar el repositorio
 ```bash
