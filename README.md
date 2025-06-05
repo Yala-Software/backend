@@ -57,7 +57,8 @@ uvicorn main:app --reload
 
 ---
 
-## ⚙️ Requisitos de Implementación
+<details>
+  <summary><strong>⚙️ Requisitos de Implementación</strong></summary>
 
 La implementación de transacciones debería:
 
@@ -70,7 +71,8 @@ La implementación de transacciones debería:
 
 ---
 
-## 🗄️ Esquema de Base de Datos
+<details>
+  <summary><strong>🗄️ Esquema de Base de Datos</strong></summary>
 
 - **👤 users**: Información de usuario (id, username, email, hashed_password, full_name)
 - **💵 currencies**: Información de monedas (id, code, name)
@@ -79,14 +81,16 @@ La implementación de transacciones debería:
 
 ---
 
-## 🧪 Tutorial Bruno
+<details>
+  <summary><strong>🧪 Tutorial Bruno</strong></summary>
 
 - **📁 collection**: una vez descargada la aplicación, haz clic en los 3 puntos en la esquina derecha de la aplicación, al costado del perro. Ahí selecciona **Open Collection** y elige la carpeta **YALA-test**
 - **🔧 environment**: Una vez abierta la carpeta en Bruno, haz clic en la carpeta y luego selecciona un **environment**. Como no habrá ninguno, selecciona "create environment" y agrega la variable **jwt** en **Add Variable**.
 
 ---
 
-## 📱 Uso visual de la aplicación
+<details>
+  <summary><strong>📱 Uso visual de la aplicación</strong></summary>
 
 Se presenta un recorrido por las secciones del frontend:
 
