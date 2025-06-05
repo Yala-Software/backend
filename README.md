@@ -231,3 +231,16 @@ La implementación de transacciones debería:
 
 - **collection**: una vez descargada la aplicacion apretar en los 3 puntos en la esquina derecha de la aplicacion, al costado del perro. Ahi apretar en **Open Collection** y seleccionar la carpeta **YALA-test**
 - **environment**: Una ves abierta la carpeta en bruno, apretar en la carpeta en bruno y luego seleccionar un **environment**, como no habra ninguno seleccionar create environment y agregar la variable **jwt** en **Add Variable**.
+
+
+## Uso visual de la aplicacion
+
+Se presenta un recorrido por las secciones del frontend
+
+* **Visualización en la Aplicación:**
+![Uso de la aplicacion](./images/01.png)
+![Uso de la aplicacion](./images/02.png)
+![Uso de la aplicacion](./images/03.png)
+![Uso de la aplicacion](./images/04.png)
+![Uso de la aplicacion](./images/05.png)
+![Uso de la aplicacion](./images/06.png)
