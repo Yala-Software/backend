@@ -4,37 +4,37 @@ import pytest
 import coverage
 
 # Añadir el directorio raíz del proyecto al PYTHONPATH
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-sys.path.insert(0, project_root)
+directorio_raiz = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.insert(0, directorio_raiz)
 
-def run_tests_with_coverage():
+def ejecutar_pruebas_con_cobertura():
     """
-    Ejecuta todas las pruebas con un reporte de cobertura de código.
+    Ejecuta todas las pruebas unitarias con un reporte de cobertura de código.
     """
     # Iniciar la cobertura
-    cov = coverage.Coverage(
+    cobertura = coverage.Coverage(
         source=['services'],
         omit=['*/__init__.py', '*/email_service.py']  # Omitir archivos de inicialización y servicio de email
     )
-    cov.start()
+    cobertura.start()
 
     # Ejecutar las pruebas
-    result = pytest.main(['-v', 'tests/unit'])
+    resultado = pytest.main(['-v', 'tests/unit'])
 
     # Detener la cobertura
-    cov.stop()
-    cov.save()
+    cobertura.stop()
+    cobertura.save()
 
     # Generar informes
-    print("\nCoverage Summary:")
-    cov.report()
+    print("\nResumen de Cobertura:")
+    cobertura.report()
     
     # Generar informe HTML
-    cov.html_report(directory='tests/coverage_html')
+    cobertura.html_report(directory='tests/coverage_html')
     
-    print(f"\nDetailed HTML coverage report generated in tests/coverage_html/index.html")
+    print(f"\nReporte detallado de cobertura generado en tests/coverage_html/index.html")
     
-    return result
+    return resultado
 
 if __name__ == '__main__':
-    sys.exit(run_tests_with_coverage()) 
+    sys.exit(ejecutar_pruebas_con_cobertura()) 

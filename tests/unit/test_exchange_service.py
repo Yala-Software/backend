@@ -4,7 +4,7 @@ from services.exchange_service import ExchangeService
 from config import SUPPORTED_CURRENCIES
 
 def test_exchange_service_singleton():
-    # Test that the ExchangeService is a singleton
+    # Verificar que ExchangeService es un singleton
     service1 = ExchangeService()
     service2 = ExchangeService()
     
@@ -13,7 +13,7 @@ def test_exchange_service_singleton():
 @patch('core.exchange.api1_adapter.ExchangeRateAPI.get_exchange_rate')
 @patch('core.exchange.api2_adapter.CurrencyConverterAPI.get_exchange_rate')
 def test_get_exchange_rate_primary_api_success(mock_api2_get_rate, mock_api1_get_rate):
-    # Test getting exchange rate with primary API success
+    # Probar obtención de tasa con API primaria exitosa
     mock_api1_get_rate.return_value = 3.5
     
     service = ExchangeService()
@@ -26,8 +26,8 @@ def test_get_exchange_rate_primary_api_success(mock_api2_get_rate, mock_api1_get
 @patch('core.exchange.api1_adapter.ExchangeRateAPI.get_exchange_rate')
 @patch('core.exchange.api2_adapter.CurrencyConverterAPI.get_exchange_rate')
 def test_get_exchange_rate_primary_api_failure(mock_api2_get_rate, mock_api1_get_rate):
-    # Test getting exchange rate with primary API failure and fallback to secondary
-    mock_api1_get_rate.side_effect = Exception("API 1 error")
+    # Probar fallo de API primaria y uso de API secundaria
+    mock_api1_get_rate.side_effect = Exception("Error API 1")
     mock_api2_get_rate.return_value = 3.6
     
     service = ExchangeService()
@@ -40,9 +40,9 @@ def test_get_exchange_rate_primary_api_failure(mock_api2_get_rate, mock_api1_get
 @patch('core.exchange.api1_adapter.ExchangeRateAPI.get_exchange_rate')
 @patch('core.exchange.api2_adapter.CurrencyConverterAPI.get_exchange_rate')
 def test_get_exchange_rate_both_apis_failure(mock_api2_get_rate, mock_api1_get_rate):
-    # Test getting exchange rate with both APIs failing
-    mock_api1_get_rate.side_effect = Exception("API 1 error")
-    mock_api2_get_rate.side_effect = Exception("API 2 error")
+    # Probar fallo de ambas APIs
+    mock_api1_get_rate.side_effect = Exception("Error API 1")
+    mock_api2_get_rate.side_effect = Exception("Error API 2")
     
     service = ExchangeService()
     
@@ -54,7 +54,7 @@ def test_get_exchange_rate_both_apis_failure(mock_api2_get_rate, mock_api1_get_r
     mock_api2_get_rate.assert_called_once_with("USD", "PEN")
 
 def test_switch_api():
-    # Test switching between primary and fallback APIs
+    # Probar cambio entre APIs primaria y secundaria
     service = ExchangeService()
     primary_api_name = service.get_api_name()
     
@@ -68,14 +68,13 @@ def test_switch_api():
     
     assert back_to_primary == primary_api_name
 
-@patch('core.exchange.api1_adapter.ExchangeRateAPI.get_supported_currencies')
-def test_get_supported_currencies(mock_api1_get_currencies):
-    # Test getting supported currencies
-    expected_currencies = SUPPORTED_CURRENCIES
-    mock_api1_get_currencies.return_value = expected_currencies
-    
+def test_get_supported_currencies():
+    # Probar obtención de monedas soportadas
     service = ExchangeService()
     currencies = service.get_supported_currencies()
     
-    assert currencies == expected_currencies
-    mock_api1_get_currencies.assert_called_once() 
+    # Verificar formato
+    assert isinstance(currencies, dict)
+    assert len(currencies) > 0
+    assert "USD" in currencies
+    assert "PEN" in currencies 

@@ -1,9 +1,13 @@
+import os
+import sys
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database.models import Base, User, Currency, Account, Transaction
 import datetime
 from core.security import hash_password
+
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__))) 
 
 @pytest.fixture
 def db_engine():
