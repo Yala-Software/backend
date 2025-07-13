@@ -139,6 +139,12 @@ locust -f tests/performance/locustfile.py --host http://localhost:8000
 ```
 
 ### 📊 Resultados
+
+A continuación se muestran ejemplos de los resultados obtenidos durante las pruebas de rendimiento:
+
+![Resultados consola Locust](./images/11.png)
+![Resultados interfaz web Locust](./images/12.png)
+
 Los resultados de las pruebas de rendimiento se verificarán para asegurar la consistencia de datos después de múltiples operaciones concurrentes.
 </details>
 

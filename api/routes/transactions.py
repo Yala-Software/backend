@@ -25,7 +25,7 @@ class TransactionResponse(BaseModel):
     destination_currency_id: int
     exchange_rate: float
     description: Optional[str]
-    timestamp: Optional[str]
+    timestamp: Optional[datetime]
     
     class Config:
         orm_mode = True

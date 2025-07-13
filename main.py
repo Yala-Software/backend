@@ -4,7 +4,7 @@ import os
 
 from database.database import get_db, create_db_and_tables, init_db_data
 from api.routes import auth, users, accounts, transactions
-from services.exchange_service import ExchangeService
+from services.exchange_service_mock import ExchangeServiceMock
 
 app = FastAPI(title="YALA ¿Ya la tienes?", version="1.0.0")
 
@@ -23,7 +23,7 @@ app.include_router(transactions.router, prefix="/api/transactions", tags=["Trans
 
 os.makedirs("data", exist_ok=True)
 
-exchange_service = ExchangeService()
+exchange_service = ExchangeServiceMock()
 
 @app.on_event("startup")
 async def startup():
