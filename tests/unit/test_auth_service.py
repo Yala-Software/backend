@@ -63,6 +63,35 @@ def test_register_user(db_session, monkeypatch):
     assert user.username == "newuser"
     assert user.full_name == "New User"
     assert verify_password("newpassword", user.hashed_password)
+    
+    # Verificar token
+    token = result["access_token"]
+    payload = jwt.decode(token, JWT_SECRET_KEY, algorithms=[JWT_ALGORITHM])
+    assert "sub" in payload
+    assert payload["sub"] == "new@example.com"
+
+def test_register_user_email_exception(db_session, monkeypatch):
+    # Mockear función de envío de email que lanza excepción
+    def mock_send_welcome_email(email, name):
+        raise Exception("Error al enviar email")
+    
+    monkeypatch.setattr("services.auth_service.send_welcome_email", mock_send_welcome_email)
+    
+    # Verificar que el registro funciona incluso si falla el envío de email
+    result = AuthService.register_user(
+        db_session,
+        username="exception_user",
+        email="exception@example.com",
+        password="password123",
+        full_name="Exception User"
+    )
+    
+    # Verificar que se creó el usuario a pesar del error de email
+    assert result is not None
+    assert "access_token" in result
+    from services.user_service import UserService
+    user = UserService.get_user_by_email(db_session, "exception@example.com")
+    assert user is not None
 
 def test_register_user_existing_email(db_session, test_user, monkeypatch):
     # Mockear función de envío de email

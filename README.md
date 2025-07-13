@@ -74,6 +74,77 @@ La implementación de transacciones debería:
 ---
 
 <details>
+  <summary><strong>🧪 Pruebas Unitarias</strong></summary>
+
+Se ha implementado una suite completa de pruebas unitarias utilizando PyTest para asegurar la calidad y robustez del código:
+
+### 📊 Resultados de Cobertura
+
+```
+Resumen de Cobertura:
+Name                              Stmts   Miss  Cover
+-----------------------------------------------------
+services\account_service.py          30      0   100%
+services\auth_service.py             33      0   100%
+services\exchange_service.py         30      0   100%
+services\transaction_service.py      46      0   100%
+services\user_service.py              9      0   100%
+-----------------------------------------------------
+TOTAL                               148      0   100%
+```
+
+### 📝 Detalles de Pruebas
+- **Total de pruebas:** 36 pruebas
+- **Cobertura:** 100% en todos los servicios
+- **Categorías de pruebas:**
+  - Servicios de usuarios y autenticación
+  - Servicios de cuentas y transacciones
+  - Servicios de cambio de divisas
+  - Manejo de errores y excepciones
+
+### 🚀 Ejecutar Pruebas
+
+Para ejecutar las pruebas y generar el informe de cobertura:
+
+```bash
+python tests/run_tests.py
+```
+
+El informe detallado de cobertura HTML se generará en `tests/coverage_html/index.html`
+</details>
+
+---
+
+<details>
+  <summary><strong>🚄 Pruebas de Rendimiento</strong></summary>
+
+Las pruebas de rendimiento utilizando Locust permiten evaluar el comportamiento del sistema bajo carga:
+
+### 📋 Escenarios de Pruebas
+- Depósitos y transferencias simultáneas
+- Transferencias entre diferentes monedas
+- Conversiones de divisas
+- Validación de consistencia de datos
+
+### ⚙️ Configuración para Pruebas de Rendimiento
+Para ejecutar las pruebas de rendimiento:
+
+```bash
+python tests/performance/run_performance_tests.py
+```
+
+Para utilizar la interfaz web de Locust:
+```bash
+locust -f tests/performance/locustfile.py --host http://localhost:8000
+```
+
+### 📊 Resultados
+Los resultados de las pruebas de rendimiento se verificarán para asegurar la consistencia de datos después de múltiples operaciones concurrentes.
+</details>
+
+---
+
+<details>
   <summary><strong>🗄️ Esquema de Base de Datos</strong></summary>
 
 - **👤 users**: Información de usuario (id, username, email, hashed_password, full_name)

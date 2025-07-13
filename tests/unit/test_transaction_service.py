@@ -3,6 +3,7 @@ from fastapi import HTTPException
 from services.transaction_service import TransactionService
 from services.account_service import AccountService
 from database.models import Transaction, Account
+from unittest.mock import patch
 
 def test_create_transaction(db_session, test_user, test_accounts, monkeypatch):
     # Mockear el servicio de cambio y la notificación por email
@@ -135,6 +136,31 @@ def test_create_transaction_nonexistent_destination_account(db_session, test_use
     
     assert excinfo.value.status_code == 404
     assert "La cuenta de destino no existe" in excinfo.value.detail
+
+def test_create_transaction_notification_exception(db_session, test_user, test_accounts, monkeypatch):
+    # Mockear notificación que lanza una excepción
+    def mock_get_exchange_rate(self, from_currency, to_currency):
+        return 3.5
+    
+    def mock_send_transaction_notification(email, name, transaction, source_code, dest_code, is_sender):
+        raise Exception("Error de notificación")
+    
+    monkeypatch.setattr("services.transaction_service.ExchangeService.get_exchange_rate", mock_get_exchange_rate)
+    monkeypatch.setattr("services.transaction_service.send_transaction_notification", mock_send_transaction_notification)
+    
+    # La transacción debe completarse a pesar del error de notificación
+    transaction = TransactionService.create_transaction(
+        db_session,
+        test_user.id,
+        test_accounts["PEN"].id,
+        test_accounts["USD"].id,
+        50.0,
+        "Test notification error"
+    )
+    
+    # Verificar que la transacción se creó correctamente
+    assert transaction is not None
+    assert transaction.source_amount == 50.0
 
 def test_get_user_transactions(db_session, test_user, test_accounts, monkeypatch):
     # Mockear funciones necesarias

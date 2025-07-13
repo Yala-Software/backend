@@ -14,7 +14,7 @@ def ejecutar_pruebas_con_cobertura():
     # Iniciar la cobertura
     cobertura = coverage.Coverage(
         source=['services'],
-        omit=['*/__init__.py', '*/email_service.py']  # Omitir archivos de inicialización y servicio de email
+        omit=['*/__init__.py', '*/email_service.py', '*/exchange_service_mock.py']  # Omitir archivos específicos
     )
     cobertura.start()
 
