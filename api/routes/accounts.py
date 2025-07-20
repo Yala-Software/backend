@@ -7,7 +7,7 @@ from datetime import datetime
 from database.database import get_db
 from database.models import User, Account, Currency, Transaction
 from core.security import get_current_user
-from services.email_service import send_account_statement
+from services.account_service import AccountService
 
 router = APIRouter()
 
@@ -46,13 +46,7 @@ class AccountWithTransactionsResponse(BaseModel):
 
 @router.get("/", response_model=List[AccountInfo])
 async def get_user_accounts(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    accounts = db.query(Account).filter(
-        Account.user_id == current_user.id
-    ).join(Currency).options(
-        joinedload(Account.currency)
-    ).all()
-    
-    return accounts
+    return AccountService.get_user_accounts(db, current_user.id)
 
 @router.get("/{account_id}", response_model=AccountWithTransactionsResponse)
 async def get_account_details(
@@ -60,22 +54,7 @@ async def get_account_details(
     current_user: User = Depends(get_current_user), 
     db: Session = Depends(get_db)
 ):
-    account = db.query(Account).filter(
-        Account.id == account_id, 
-        Account.user_id == current_user.id
-    ).join(Currency).options(
-        joinedload(Account.currency)
-    ).first()
-    
-    if not account:
-        raise HTTPException(status_code=404, detail="Cuenta no encontrada")
-    
-    transactions = db.query(Transaction).filter(
-        (Transaction.source_account_id == account_id) | 
-        (Transaction.destination_account_id == account_id)
-    ).order_by(Transaction.timestamp.desc()).all()
-    
-    return {"account": account, "transactions": transactions}
+    return AccountService.get_account_details(db, account_id, current_user.id)
 
 @router.post("/{account_id}/export")
 async def export_account_statement(
@@ -84,21 +63,11 @@ async def export_account_statement(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    account = db.query(Account).filter(
-        Account.id == account_id, 
-        Account.user_id == current_user.id
-    ).first()
-    
-    if not account:
-        raise HTTPException(status_code=404, detail="Cuenta no encontrada")
-        
-    transactions = db.query(Transaction).filter(
-        (Transaction.source_account_id == account_id) | 
-        (Transaction.destination_account_id == account_id)
-    ).order_by(Transaction.timestamp.desc()).all()
-    
-    try:
-        send_account_statement(current_user.email, current_user.full_name, account, transactions, format)
-        return {"message": f"El estado de cuenta en formato {format.upper()} ha sido enviado a tu correo electrónico"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error al enviar el estado de cuenta: {str(e)}")
+    return AccountService.export_account_statement(
+        db, 
+        account_id, 
+        current_user.id, 
+        current_user.email, 
+        current_user.full_name, 
+        format
+    )
